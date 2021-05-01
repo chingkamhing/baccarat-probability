@@ -44,11 +44,6 @@ Two players bet on banker and player respectively with different amount
 '''
 
 #%%
-bets = [
-    {"bet": BET_BANKER, "amount": 1000},
-    {"bet": BET_PLAYER, "amount": 10},
-]
-
 class Player:
     def __init__(self, name, balance):
         self.name = name
@@ -145,12 +140,17 @@ def show_result(bet_record_df):
     # plt.show()
 
 # %%
+# define 2 players and their bet hand and amount
+bets = [
+    {'bet': BET_BANKER, 'amount': 1000},
+    {'bet': BET_PLAYER, 'amount': 10},
+]
+
 # test cases of number of matches to play
 test_matches = [1000, 10000, 100000]
 
-num_players = len(bets)
 for num_matches in test_matches:
-    player = {i: Player("Player {0}".format(i), initial_balance) for i in range(num_players)}
+    player = {i: Player("Player bet {0}".format(bet['bet']), initial_balance) for i, bet in enumerate(bets)}
     baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
     for i, bet in enumerate(bets):
         player[i].place_bet(bet['bet'], bet['amount'])
