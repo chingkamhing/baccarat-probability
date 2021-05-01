@@ -118,37 +118,43 @@ class Baccarat:
         return df
 
 def show_result(bet_record_df):
-    player_group = bet_record_df.groupby('player')
-    num_matches = player_group.get_group('house')['match'].count()
-
-    # show statistic
-    display(HTML('<h1>Game result statistic ({0})</h1>'.format(num_matches)))
-    print(player_group.get_group('house').value_counts(['result'], normalize=True))
-
     # plot balanace
-    display(HTML('<h1>Players record statistic ({0})</h1>'.format(num_matches)))
+    display(HTML('<h3>All players cumulative balance</h3>'))
     df_winloss = bet_record_df[['match', 'player', 'winloss']]
     df = df_winloss.pivot(index=['match'], columns=['player'], values=['winloss'])
-    display(HTML('<h2>All players cumulative balance</h2>'))
     df_cumsum_all = df.cumsum()
     df_cumsum_all.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
     plt.show()
-    # display(HTML('<h2>House cumulative balance</h2>'))
+    # display(HTML('<h3>House cumulative balance</h3>'))
     # df_cumsum_1 = df_cumsum_all['winloss']['house']
     # df_cumsum_1.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
     # plt.show()
 
+    # show statistic
+    display(HTML('<h2>Game result statistic</h2>'))
+    display(HTML('<h3>Number of matches played</h3>'))
+    player_group = bet_record_df.groupby('player')
+    num_matches = player_group.get_group('house')['match'].count()
+    print(num_matches)
+    display(HTML('<h3>Percentage occurence of different result</h3>'))
+    print(player_group.get_group('house').value_counts(['result'], normalize=True))
+    display(HTML('<h3>Win-Loss after final match</h3>'))
+    print(df_cumsum_all['winloss'].iloc[[-1]])
+    display(HTML('<h3>Max draw-down</h3>'))
+    print(df_cumsum_all['winloss'].min())
+
 # %%
 # define 2 players and their bet hand and amount
 bets = [
-    {'bet': BET_BANKER, 'amount': 1000},
-    {'bet': BET_PLAYER, 'amount': 10},
+    {'bet': BET_BANKER, 'amount': 20000},
+    {'bet': BET_PLAYER, 'amount': 500},
 ]
 
 # test cases of number of matches to play
-test_matches = [1000, 10000, 100000]
+test_matches = [200 for _ in range(10)]
 
-for num_matches in test_matches:
+for imatch, num_matches in enumerate(test_matches):
+    display(HTML('<h1>Match [{0}]:</h1>'.format(imatch)))
     player = {i: Player("Player bet {0}".format(bet['bet']), initial_balance) for i, bet in enumerate(bets)}
     baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
     for i, bet in enumerate(bets):
