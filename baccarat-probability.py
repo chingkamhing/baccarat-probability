@@ -29,7 +29,7 @@ tie_payout = 8
 # 5% commission for the house
 win_commission = 0.05
 # each player's initial balance
-initial_balance = 1000000
+initial_balance = 10000000
 
 FIG_WIDTH = 16
 FIG_HEIGHT = 10
