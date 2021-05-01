@@ -156,8 +156,8 @@ def show_result(bet_record_df):
 test_matches = [1000, 10000, 100000]
 
 num_players = len(bets)
-player = {i: Player("Player {0}".format(i), initial_balance) for i in range(num_players)}
 for num_matches in test_matches:
+    player = {i: Player("Player {0}".format(i), initial_balance) for i in range(num_players)}
     baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
     for i, bet in enumerate(bets):
         player[i].place_bet(bet['bet'], bet['amount'])
