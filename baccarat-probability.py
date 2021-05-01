@@ -52,6 +52,7 @@ bets = [
 class Player:
     def __init__(self, name, balance):
         self.name = name
+        self.initial_amount = balance
         self.balance = balance
         self.bet = ""
         self.bet_amount = 0
@@ -166,3 +167,6 @@ for num_matches in test_matches:
         baccarat.conclude(result)
     bet_record_df = baccarat.df()
     show_result(bet_record_df)
+
+# %%
+display(HTML('<h1>All tests finished.</h1>'))
