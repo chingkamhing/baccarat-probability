@@ -139,18 +139,10 @@ def show_result(bet_record_df):
     df_cumsum_all = df.cumsum()
     df_cumsum_all.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
     plt.show()
-    display(HTML('<h2>Player 0 (bet big on banker) cumulative balance</h2>'))
-    df_cumsum_1 = df_cumsum_all['winloss']['Player 0']
-    df_cumsum_1.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
-    plt.show()
-    display(HTML('<h2>Player 1 (bet small on player) cumulative balance</h2>'))
-    df_cumsum_1 = df_cumsum_all['winloss']['Player 1']
-    df_cumsum_1.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
-    plt.show()
-    display(HTML('<h2>House cumulative balance</h2>'))
-    df_cumsum_1 = df_cumsum_all['winloss']['house']
-    df_cumsum_1.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
-    plt.show()
+    # display(HTML('<h2>House cumulative balance</h2>'))
+    # df_cumsum_1 = df_cumsum_all['winloss']['house']
+    # df_cumsum_1.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
+    # plt.show()
 
 # %%
 # test cases of number of matches to play
