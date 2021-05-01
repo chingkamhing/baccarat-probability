@@ -96,7 +96,7 @@ class Baccarat:
         self.probability_banker = probability_banker
         self.probability_player = probability_player
         self.probability_tie = probability_tie
-        self.commission = 0
+        self.balance = 0
         self.bet_record = []
         self.record_index = 0
     def deal(self):
@@ -109,13 +109,13 @@ class Baccarat:
             result = BET_TIE
         return result
     def conclude(self, result):
-        commission = 0
+        profitloss = 0
         for i in player:
             [win_loss, house_commission] = player[i].pay_collect(result)
             self.bet_record.append({"match": self.record_index, "result": result, "player": player[i].name, "winloss": win_loss})
-            commission += house_commission
-        self.commission += commission
-        self.bet_record.append({"match": self.record_index, "result": result, "player": "house", "winloss": commission})
+            profitloss += house_commission + (-1 * win_loss)
+        self.balance += profitloss
+        self.bet_record.append({"match": self.record_index, "result": result, "player": "house", "winloss": profitloss})
         self.record_index += 1
     def print(self):
         print("result player winloss")
