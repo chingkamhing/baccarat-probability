@@ -60,7 +60,6 @@ class Player:
         self.bet_amount = amount
     def pay_collect(self, result):
         win_loss = 0
-        house_commission = 0
         if self.bet_hand == "":
             # player did not bet, no win nor lose
             pass
@@ -75,7 +74,6 @@ class Player:
                 payout = tie_payout
             win = payout * self.bet_amount
             win_loss = win * (1 - win_commission)
-            house_commission = win * (win_commission)
         else:
             # player's bet losed
             payout = 0
@@ -86,9 +84,8 @@ class Player:
             else:
                 payout = 0
             win_loss = -1 * payout * self.bet_amount
-            house_commission = 0
         self.balance += win_loss
-        return win_loss, house_commission
+        return win_loss
 
 class Baccarat:
     def __init__(self, player, probability_banker, probability_player, probability_tie):
@@ -111,9 +108,9 @@ class Baccarat:
     def conclude(self, result):
         profitloss = 0
         for i in player:
-            [win_loss, house_commission] = player[i].pay_collect(result)
+            win_loss = player[i].pay_collect(result)
             self.bet_record.append({"match": self.record_index, "result": result, "player": player[i].name, "winloss": win_loss})
-            profitloss += house_commission + (-1 * win_loss)
+            profitloss -= win_loss
         self.balance += profitloss
         self.bet_record.append({"match": self.record_index, "result": result, "player": "house", "winloss": profitloss})
         self.record_index += 1
