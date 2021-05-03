@@ -173,6 +173,39 @@ for imatch, num_matches in enumerate(test_matches):
 
 # %%
 # Test case 2
+# * define 2 players and their bet hand and amount
+# * each player's bet amount is largely different (e.g. one 500, one 20,000)
+# * increase the sample to very large to see if there is any pattern
+num_test = 10 * 1000
+num_matches = 200
+bets = [
+    {'bet': BET_BANKER, 'amount': 20000},
+    {'bet': BET_PLAYER, 'amount': 500},
+]
+# test cases of number of matches to play
+test_matches = [num_matches for _ in range(num_test)]
+
+display(HTML('<h1>Test 2 - Two player different bet ammount large samples:</h1>'))
+playerWinLoss = []
+for imatch, num_matches in enumerate(test_matches):
+    player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
+    baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
+    for i, bet in enumerate(bets):
+        player[i].place_bet(bet['bet'], bet['amount'])
+    for i in range(num_matches):
+        result = baccarat.deal()
+        baccarat.conclude(result)
+    test_result = {}
+    for i in player:
+        test_result[player[i].name] = player[i].balance
+    playerWinLoss.append(test_result)
+df = pd.DataFrame.from_dict(playerWinLoss)
+df.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
+plt.show()
+df.describe()
+
+# %%
+# Test case 2
 # * define many players and their bet hand and amount
 # * each player's bet amount is different in order to show their relationship
 # Conclusion
@@ -188,7 +221,7 @@ bets = [
 # test cases of number of matches to play
 test_matches = [num_matches for _ in range(num_test)]
 
-display(HTML('<h1>Test 2 - Different player different bet ammount comparison:</h1>'))
+display(HTML('<h1>Test 3 - Different player different bet ammount comparison:</h1>'))
 for imatch, num_matches in enumerate(test_matches):
     display(HTML('<h2>Match [{0}]:</h2>'.format(imatch)))
     player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
