@@ -131,31 +131,67 @@ def show_result(bet_record_df):
     # plt.show()
 
     # show statistic
-    display(HTML('<h2>Game result statistic</h2>'))
-    display(HTML('<h3>Number of matches played</h3>'))
+    display(HTML('<h3>Game result statistic</h3>'))
+    display(HTML('<h4>Number of matches played</h4>'))
     player_group = bet_record_df.groupby('player')
     num_matches = player_group.get_group('house')['match'].count()
     print(num_matches)
-    display(HTML('<h3>Percentage occurence of different result</h3>'))
+    display(HTML('<h4>Percentage occurence of different result</h4>'))
     print(player_group.get_group('house').value_counts(['result'], normalize=True))
-    display(HTML('<h3>Win-Loss after final match</h3>'))
+    display(HTML('<h4>Win-Loss after final match</h4>'))
     print(df_cumsum_all['winloss'].iloc[[-1]])
-    display(HTML('<h3>Max draw-down</h3>'))
+    display(HTML('<h4>Max draw-down</h4>'))
     print(df_cumsum_all['winloss'].min())
 
 # %%
-# define 2 players and their bet hand and amount
+# Test case 1
+# * define 2 players and their bet hand and amount
+# * each player's bet amount is largely different (e.g. one 500, one 20,000)
+# Conclusion
+# * win-loss seems random
+num_test = 10
+num_matches = 200
 bets = [
     {'bet': BET_BANKER, 'amount': 20000},
     {'bet': BET_PLAYER, 'amount': 500},
 ]
-
 # test cases of number of matches to play
-test_matches = [200 for _ in range(10)]
+test_matches = [num_matches for _ in range(num_test)]
 
+display(HTML('<h1>Test 1 - Two player different bet ammount comparison:</h1>'))
 for imatch, num_matches in enumerate(test_matches):
-    display(HTML('<h1>Match [{0}]:</h1>'.format(imatch)))
-    player = {i: Player("Player bet {0}".format(bet['bet']), initial_balance) for i, bet in enumerate(bets)}
+    display(HTML('<h2>Match [{0}]:</h2>'.format(imatch)))
+    player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
+    baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
+    for i, bet in enumerate(bets):
+        player[i].place_bet(bet['bet'], bet['amount'])
+    for i in range(num_matches):
+        result = baccarat.deal()
+        baccarat.conclude(result)
+    bet_record_df = baccarat.df()
+    show_result(bet_record_df)
+
+# %%
+# Test case 2
+# * define many players and their bet hand and amount
+# * each player's bet amount is different in order to show their relationship
+# Conclusion
+num_test = 10
+num_matches = 10000
+bets = [
+    {'bet': BET_PLAYER, 'amount': 10},
+    {'bet': BET_PLAYER, 'amount': 100},
+    {'bet': BET_PLAYER, 'amount': 1000},
+    {'bet': BET_PLAYER, 'amount': 10000},
+    {'bet': BET_PLAYER, 'amount': 100000},
+]
+# test cases of number of matches to play
+test_matches = [num_matches for _ in range(num_test)]
+
+display(HTML('<h1>Test 2 - Different player different bet ammount comparison:</h1>'))
+for imatch, num_matches in enumerate(test_matches):
+    display(HTML('<h2>Match [{0}]:</h2>'.format(imatch)))
+    player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
     baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
     for i, bet in enumerate(bets):
         player[i].place_bet(bet['bet'], bet['amount'])
