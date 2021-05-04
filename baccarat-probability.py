@@ -2,6 +2,11 @@
 Baccarat probabillity simulation
 * this project aims to simulate the probabillity of various players' bet result after playing a numerous matches of baccarat
 
+Note:
+* jupyter-lab fail to export HTML
+    + https://github.com/jupyterlab/jupyterlab_pygments/issues/5
+    + invoke "pip3 install --upgrade Pygments" to fix the problem
+
 References:
 * https://pandas.pydata.org/docs/user_guide/index.html#
 '''
@@ -158,7 +163,7 @@ bets = [
 # test cases of number of matches to play
 test_matches = [num_matches for _ in range(num_test)]
 
-display(HTML('<h1>Test 1 - Two player different bet ammount comparison:</h1>'))
+display(HTML('<h1>Test 1 - Two player different bet amount comparison:</h1>'))
 for imatch, num_matches in enumerate(test_matches):
     display(HTML('<h2>Match [{0}]:</h2>'.format(imatch)))
     player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
@@ -185,7 +190,7 @@ bets = [
 # test cases of number of matches to play
 test_matches = [num_matches for _ in range(num_test)]
 
-display(HTML('<h1>Test 2 - Two player different bet ammount large samples:</h1>'))
+display(HTML('<h1>Test 2 - Two player different bet amount large samples:</h1>'))
 playerWinLoss = []
 for imatch, num_matches in enumerate(test_matches):
     player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
@@ -205,7 +210,7 @@ plt.show()
 df.describe()
 
 # %%
-# Test case 2
+# Test case 3
 # * define many players and their bet hand and amount
 # * each player's bet amount is different in order to show their relationship
 # Conclusion
@@ -221,7 +226,7 @@ bets = [
 # test cases of number of matches to play
 test_matches = [num_matches for _ in range(num_test)]
 
-display(HTML('<h1>Test 3 - Different player different bet ammount comparison:</h1>'))
+display(HTML('<h1>Test 3 - Different player different bet amount comparison:</h1>'))
 for imatch, num_matches in enumerate(test_matches):
     display(HTML('<h2>Match [{0}]:</h2>'.format(imatch)))
     player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
