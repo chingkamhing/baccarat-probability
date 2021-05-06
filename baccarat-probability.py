@@ -240,4 +240,42 @@ for imatch, num_matches in enumerate(test_matches):
     show_result(bet_record_df)
 
 # %%
+# Test case 4
+# * test the error rate with defined sample size
+num_test = 10 * 1000
+num_matches = 10 * 1000
+bets = [
+    {'bet': BET_BANKER, 'amount': 10},
+    {'bet': BET_PLAYER, 'amount': 10},
+]
+# test cases of number of matches to play
+test_matches = [num_matches for _ in range(num_test)]
+
+display(HTML('<h1>Test 4 - Sample size variation:</h1>'))
+display(HTML('<p>Number of test: {0}</p>'.format(num_test)))
+display(HTML('<p>Samples size: {0}</p>'.format(num_matches)))
+results_df = pd.DataFrame()
+for imatch, num_matches in enumerate(test_matches):
+    player = {i: Player("Player {0} bet {1}".format(i, bet['bet']), initial_balance) for i, bet in enumerate(bets)}
+    baccarat = Baccarat(player, probability_banker, probability_player, probability_tie)
+    for i, bet in enumerate(bets):
+        player[i].place_bet(bet['bet'], bet['amount'])
+    results = []
+    for i in range(num_matches):
+        result = baccarat.deal()
+        results.append(result)
+    result_df = pd.DataFrame(data=results, columns=['result'])
+    result_value_counts = result_df['result'].value_counts(normalize=True)
+    results_df = results_df.append(result_value_counts, ignore_index=True)
+results_df.plot.box(figsize=(FIG_WIDTH, FIG_HEIGHT))
+plt.show()
+results_df[BET_BANKER].hist(figsize=(FIG_WIDTH, FIG_HEIGHT), bins=20)
+plt.show()
+results_df[BET_PLAYER].hist(figsize=(FIG_WIDTH, FIG_HEIGHT), bins=20)
+plt.show()
+results_df[BET_TIE].hist(figsize=(FIG_WIDTH, FIG_HEIGHT), bins=20)
+plt.show()
+print(results_df.describe())
+
+# %%
 display(HTML('<h1>All tests finished.</h1>'))
