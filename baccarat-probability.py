@@ -24,9 +24,9 @@ BET_PLAYER = "player"
 BET_TIE = "tie"
 
 # probability occurance of bet of hands
-probability_banker = 46
-probability_player = 46
-probability_tie = 8
+probability_banker = 45
+probability_player = 45
+probability_tie = 10
 # payout ratio
 win_payout = 1
 tie_payout = 8
