@@ -23,6 +23,9 @@ BET_BANKER = "banker"
 BET_PLAYER = "player"
 BET_TIE = "tie"
 
+# house name
+NAME_HOUSE = "House"
+
 # probability occurance of bet of hands
 probability_banker = 45
 probability_player = 45
@@ -31,7 +34,7 @@ probability_tie = 10
 win_payout = 1
 tie_payout = 8
 # 5% commission for the house
-win_commission = 0.05
+banker_win_commission = 0.05
 # each player's initial balance
 initial_balance = 10000000
 
@@ -64,10 +67,12 @@ class Player:
             # player did not bet, no win nor lose
             pass
         elif result == self.bet_hand:
-            # player's bet win
+            # player's bet correct
             payout = 0
+            win_commission = 0
             if result == BET_BANKER:
                 payout = win_payout
+                win_commission = banker_win_commission
             elif result == BET_PLAYER:
                 payout = win_payout
             elif result == BET_TIE:
@@ -75,7 +80,7 @@ class Player:
             win = payout * self.bet_amount
             win_loss = win * (1 - win_commission)
         else:
-            # player's bet losed
+            # player's bet incorrect
             payout = 0
             if result == BET_BANKER:
                 payout = win_payout
@@ -112,7 +117,7 @@ class Baccarat:
             self.bet_record.append({"match": self.record_index, "result": result, "player": player[i].name, "winloss": win_loss})
             profitloss -= win_loss
         self.balance += profitloss
-        self.bet_record.append({"match": self.record_index, "result": result, "player": "house", "winloss": profitloss})
+        self.bet_record.append({"match": self.record_index, "result": result, "player": NAME_HOUSE, "winloss": profitloss})
         self.record_index += 1
     def print(self):
         print("result player winloss")
@@ -131,7 +136,7 @@ def show_result(bet_record_df):
     df_cumsum_all.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
     plt.show()
     # display(HTML('<h3>House cumulative balance</h3>'))
-    # df_cumsum_1 = df_cumsum_all['winloss']['house']
+    # df_cumsum_1 = df_cumsum_all['winloss'][NAME_HOUSE]
     # df_cumsum_1.plot(figsize=(FIG_WIDTH, FIG_HEIGHT))
     # plt.show()
 
@@ -139,10 +144,10 @@ def show_result(bet_record_df):
     display(HTML('<h3>Game result statistic</h3>'))
     display(HTML('<h4>Number of matches played</h4>'))
     player_group = bet_record_df.groupby('player')
-    num_matches = player_group.get_group('house')['match'].count()
+    num_matches = player_group.get_group(NAME_HOUSE)['match'].count()
     print(num_matches)
     display(HTML('<h4>Percentage occurence of different result</h4>'))
-    print(player_group.get_group('house').value_counts(['result'], normalize=True))
+    print(player_group.get_group(NAME_HOUSE).value_counts(['result'], normalize=True))
     display(HTML('<h4>Win-Loss after final match</h4>'))
     print(df_cumsum_all['winloss'].iloc[[-1]])
     display(HTML('<h4>Max draw-down</h4>'))
